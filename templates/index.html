@@ -3,13 +3,31 @@
 <title>Temp</title>
 {% endblock %} {% block body %}
 
-<form action="/" method="POST" enctype=multipart/form-data>
+<form action="/file" method="POST" enctype=multipart/form-data>
+  <label for="column">delete columns</label>
+  <input id="column" type="text" name="dColumns" /><input type="checkbox" name="dColumnsCB">
+  <br>
+  <br>
+  <label for="column">set new headers</label>
+  <input id="column" type="text" name="newHeaders" /><input type="checkbox" name="newHeadersCB">
+  <br>
+  <br>
   <label for="column">name of column </label>
   <input id="column" type="text" name="column" required />
+ 
   <label for="value">searching value </label>
   <input id="value" type="text" name="value" required />
+  <br>
+  <br>
+  <label for="value">set value next </label>
+  <input type="checkbox" name="valueNext">
+  <label for="value">replace value </label>
+  <input type="text" name="replaceValue">
+  <br>
+  <br>
   <label for="upload">Upload your file </label><br />
   <input id="upload" type="file" name="upload" accept=".xlsx, .xls" required />
+  
   <input type="submit" value="send" />
 </form>
 
