@@ -1,0 +1,16 @@
+{% extends 'base.html' %} {% block head%}
+
+<title>Temp</title>
+{% endblock %} {% block body %}
+
+<form action="/" method="POST" enctype=multipart/form-data>
+  <label for="column">name of column </label>
+  <input id="column" type="text" name="column" required />
+  <label for="value">searching value </label>
+  <input id="value" type="text" name="value" required />
+  <label for="upload">Upload your file </label><br />
+  <input id="upload" type="file" name="upload" accept=".xlsx, .xls" required />
+  <input type="submit" value="send" />
+</form>
+
+{%endblock %}
