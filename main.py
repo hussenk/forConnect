@@ -23,12 +23,6 @@ def read():
         print('error handelErrorUpload')
         return redirect(helpers.home)
 
-    try:
-        srv.getForm()
-    except:
-        print('error getForm')
-        return redirect(helpers.home)
-
     srv.setDirectory(app.config['UPLOAD_FOLDER'])
 
     try:
@@ -38,15 +32,29 @@ def read():
         return redirect(helpers.home)
 
     try:
+        srv.getForm()
+    except:
+        print('error getForm')
+        return redirect(helpers.home)
+
+    try:
         srv.setHeaders()
     except:
         print('error setHeaders')
         return redirect(helpers.home)
+
     try:
         srv.readRows()
     except:
         print('error readRows')
         return redirect(helpers.home)
+
+    # srv.replaceText()
+    try:
+        srv.replaceText()
+    except:
+        print('error replaceText')
+        # return redirect(helpers.home)
 
     if request.form.get('dColumnsCB') == 'on':
         # print('delete')
@@ -63,6 +71,7 @@ def read():
     # except:
     #     print('error download')
         # return redirect(helpers.home)
+
     return render_template('file.html')
 
 

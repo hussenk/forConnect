@@ -4,15 +4,25 @@ from flask import Flask, render_template, request, send_file, send_from_director
 from openpyxl import load_workbook
 import sys
 
+
 class service:
 
     def __init__(self):
         self.arrayData = []
+        self.newHeaders = []
+        self.dColumns = []
+        self.setNext = False
 
     def getForm(self):
-        self.newHeaders = helpers.stringSpelter(request.form['newHeaders'])
-        # print(self.newHeaders)
-        self.dColumns = helpers.stringSpelter(request.form['dColumns'])
+        if (request.form.get('newHeadersCB') == 'on'):
+            self.newHeaders = helpers.stringSpelter(request.form['newHeaders'])
+        if (request.form.get('dColumnsCB') == 'on'):
+            self.dColumns = helpers.stringSpelter(request.form['dColumns'])
+        if (request.form.get('valueNextCB') == 'on'):
+            self.setNext = True
+        self.column = request.form['column']
+        self.value = request.form['value']
+        self.replaceValue = request.form['replaceValue']
         # print(self.dColumns)
 
     def handelErrorUpload(self):
@@ -61,12 +71,13 @@ class service:
 
     def deleteColumn(self):
         self.getHeaders()
-
         for item in self.dColumns:
-            # print(item)
-            index = self.oldHeaders.index(item)
-            self.ws.delete_cols(index+1)
-            self.oldHeaders.remove(item)
+            if (item in self.oldHeaders):
+                index = self.oldHeaders.index(item)
+                self.ws.delete_cols(index+1)
+                self.oldHeaders.remove(item)
+            else:
+                print('error delete item not exist: \t' + item)
         self.setHeaders()
         self.readRows()
 
@@ -87,10 +98,36 @@ class service:
             dict_writer.writeheader()
             dict_writer.writerows(self.arrayData)
 
-    def download(self):
-        print('file?')
+    def replaceText(self):
+        self.findInRow = []
+        index = self.oldHeaders.index(self.column)+1
+        print(index)
+        # handel out of range error
+        if(self.oldHeaders.index(self.column)+1 > len(self.oldHeaders)-1):
+            index = 0
+        nextKey = self.oldHeaders[index]
+
+        # start looping to find the key and the value
+        row = 1
+        for i in self.arrayData:
+            row += 1
+            # when find the value in key, change the value, and set it to next key
+            if(i[self.column].find(self.value) >= 0):
+                if(self.setNext):
+                    i.update(
+                        {self.column: self.replaceValue, nextKey: i[self.column]})
+                else:
+                    i.update(
+                        {self.column: i[self.column].replace(self.value, self.replaceValue)})
+                self.findInRow.append(row)
+        # print(self.arrayData)
+        # self.readRows()
+        print(self.findInRow)
+
+    # def download(self):
+        # print('file?')
         # return send_from_directory(directory=self.directory, filename='out.csv',path=sys.path[0])
-        return send_file(self.directory+'\\out.csv', as_attachment=True)
+        # return send_file(self.directory+'\\out.csv', as_attachment=True)
         # print(self.directory)
         # Returning file from appended path
         # return send_from_directory(directory=uploads, filename=filename)
