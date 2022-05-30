@@ -1,5 +1,5 @@
 from operator import imod
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, send_file, url_for, redirect
 from service import service
 import helpers
 app = Flask(__name__)
@@ -10,9 +10,6 @@ app.config['debug'] = True
 @app.route(helpers.home, methods=['POST', 'GET'])
 def index():
     return render_template('index.html')
-
-
-
 
 
 @app.route('/file', methods=['GET', 'POST'])
@@ -52,7 +49,7 @@ def read():
         return redirect(helpers.home)
 
     if request.form.get('dColumnsCB') == 'on':
-        print('delete')
+        # print('delete')
         srv.deleteColumn()
 
     try:
@@ -61,7 +58,17 @@ def read():
         print('error saveCsv')
         return redirect(helpers.home)
 
-    return 'file'
+    # try:
+    #     srv.download()
+    # except:
+    #     print('error download')
+        # return redirect(helpers.home)
+    return render_template('file.html')
+
+
+@app.route('/download')
+def download():
+    return send_file(app.config['UPLOAD_FOLDER']+'\\out.csv', as_attachment=True)
 
 
 if (__name__ == "__main__"):

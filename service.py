@@ -1,8 +1,8 @@
 import csv
 import helpers
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect
+from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect
 from openpyxl import load_workbook
-
+import sys
 
 class service:
 
@@ -11,9 +11,9 @@ class service:
 
     def getForm(self):
         self.newHeaders = helpers.stringSpelter(request.form['newHeaders'])
-        print(self.newHeaders)
+        # print(self.newHeaders)
         self.dColumns = helpers.stringSpelter(request.form['dColumns'])
-        print(self.dColumns)
+        # print(self.dColumns)
 
     def handelErrorUpload(self):
         if request.method == 'GET':
@@ -63,17 +63,16 @@ class service:
         self.getHeaders()
 
         for item in self.dColumns:
-            print(item)
+            # print(item)
             index = self.oldHeaders.index(item)
             self.ws.delete_cols(index+1)
             self.oldHeaders.remove(item)
         self.setHeaders()
         self.readRows()
 
-
     def setHeaders(self):
         count = self.getHeaders()
-        print(count)
+        # print(count)
         if (request.form.get('newHeadersCB') == 'on' and count == len(self.newHeaders)):
             self.headers = self.newHeaders
         else:
@@ -89,4 +88,9 @@ class service:
             dict_writer.writerows(self.arrayData)
 
     def download(self):
-        return send_from_directory(directory=self.directory, filename='out.csv')
+        print('file?')
+        # return send_from_directory(directory=self.directory, filename='out.csv',path=sys.path[0])
+        return send_file(self.directory+'\\out.csv', as_attachment=True)
+        # print(self.directory)
+        # Returning file from appended path
+        # return send_from_directory(directory=uploads, filename=filename)
