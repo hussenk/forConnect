@@ -101,7 +101,7 @@ class service:
     def replaceText(self):
         self.findInRow = []
         index = self.oldHeaders.index(self.column)+1
-        print(index)
+        # print(index)
         # handel out of range error
         if(self.oldHeaders.index(self.column)+1 > len(self.oldHeaders)-1):
             index = 0
