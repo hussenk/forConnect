@@ -11,14 +11,20 @@ app.config['debug'] = True
 def index():
     return render_template('index.html')
 
+@app.route('/old', methods=['POST', 'GET'])
+def old():
+    return render_template('oldindex.html')
+
 
 @app.route('/file', methods=['GET', 'POST'])
 def read():
     srv = serviceV2()
     if(srv.handelRequest() == False):
+        # TODO error flash message
         return redirect(helpers.home)
 
     if(srv.handelForm() == False):
+        # TODO error flash message
         return redirect(helpers.home)
 
     srv.handelFile()

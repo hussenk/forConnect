@@ -16,16 +16,16 @@ class serviceV2:
     # handel the request if "False" then something wrong
     def handelRequest(self):
         if request.method == 'GET':
-            print('request get')  # flash
+            print('request get') # TODO error flash message
             return False
 
         if ('upload' not in request.files):
-            print('no file')  # flash
+            print('no file')  # TODO error flash message
             return False
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
-            print('type of file')  # flash
+            print('type of file')  # TODO error flash message
             return False
 
         return True
@@ -46,7 +46,6 @@ class serviceV2:
             self.dColumns = helpers.stringSpelter(request.form['dColumns'])
         if (request.form.get('valueNextCB') == 'on'):
             self.setNext = True
-        print(request.form['column'])
         self.column = request.form['column']
         self.value = request.form['value']
         self.replaceValue = request.form['replaceValue']
@@ -69,7 +68,8 @@ class serviceV2:
                     self.ws.delete_cols(index+1)
                     temp.remove(item)
                 else:
-                    print('error delete item not exist: \t' + item)  # flash
+                    print('error delete item not exist: \t' + item) # TODO error flash message
+
 
         self.headers = temp
         return True
