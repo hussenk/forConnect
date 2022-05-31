@@ -1,6 +1,6 @@
 import csv
 import helpers
-from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect,flash
+from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect, flash
 from openpyxl import load_workbook
 import sys
 
@@ -16,18 +16,18 @@ class serviceV2:
     # handel the request if "False" then something wrong
     def handelRequest(self):
         if request.method == 'GET':
-            print('request get') # TODO error flash message
-            flash('Request Get','error')
+            print('request get')  # TODO error flash message
+            flash('Request Get', 'error')
             return False
 
         if ('upload' not in request.files):
-            flash('No File','error')
+            flash('No File', 'error')
             print('no file')  # TODO error flash message
             return False
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
-            flash('Type of File','error')
+            flash('Type of File', 'error')
             print('Type of File')  # TODO error flash message
             return False
 
@@ -71,9 +71,9 @@ class serviceV2:
                     self.ws.delete_cols(index+1)
                     temp.remove(item)
                 else:
-                    flash('error delete item not exist: \t' + item,'error')
-                    print('error delete item not exist: \t' + item) # TODO error flash message
-
+                    flash('error delete item not exist: \t' + item, 'error')
+                    # TODO error flash message
+                    print('error delete item not exist: \t' + item)
 
         self.headers = temp
         return True
@@ -110,6 +110,8 @@ class serviceV2:
                 else:
                     i.update(
                         {self.column: i[self.column].replace(self.value, self.replaceValue)})
+
+                flash('you Can find it in row:\t'+ str(row),'info')
                 self.findInRow.append(row)
         return True
 
