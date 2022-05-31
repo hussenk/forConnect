@@ -1,15 +1,19 @@
 from operator import imod
-from flask import Flask, render_template, request, send_file, url_for, redirect
+from flask import Flask, render_template, request, send_file, url_for, redirect, flash
 from serviceV2 import serviceV2
 import helpers
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
 app.config['debug'] = True
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 
 @app.route(helpers.home, methods=['POST', 'GET'])
+
 def index():
     return render_template('index.html')
+
 
 @app.route('/old', methods=['POST', 'GET'])
 def old():
@@ -21,10 +25,12 @@ def read():
     srv = serviceV2()
     if(srv.handelRequest() == False):
         # TODO error flash message
+        flash('missing in form', 'error')
         return redirect(helpers.home)
 
     if(srv.handelForm() == False):
         # TODO error flash message
+        flash('missing in form', 'error')
         return redirect(helpers.home)
 
     srv.handelFile()
@@ -35,7 +41,9 @@ def read():
     srv.readRows()
     srv.replaceText()
     srv.createCSV(app.config['UPLOAD_FOLDER'])
-    return render_template('file.html')
+
+    return send_file(app.config['UPLOAD_FOLDER']+'\\out.csv', as_attachment=True)
+    # return render_template('file.html')
 
 
 @app.route('/download')

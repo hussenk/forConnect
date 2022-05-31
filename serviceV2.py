@@ -1,6 +1,6 @@
 import csv
 import helpers
-from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect
+from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect,flash
 from openpyxl import load_workbook
 import sys
 
@@ -17,15 +17,18 @@ class serviceV2:
     def handelRequest(self):
         if request.method == 'GET':
             print('request get') # TODO error flash message
+            flash('Request Get','error')
             return False
 
         if ('upload' not in request.files):
+            flash('No File','error')
             print('no file')  # TODO error flash message
             return False
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
-            print('type of file')  # TODO error flash message
+            flash('Type of File','error')
+            print('Type of File')  # TODO error flash message
             return False
 
         return True
@@ -68,6 +71,7 @@ class serviceV2:
                     self.ws.delete_cols(index+1)
                     temp.remove(item)
                 else:
+                    flash('error delete item not exist: \t' + item,'error')
                     print('error delete item not exist: \t' + item) # TODO error flash message
 
 

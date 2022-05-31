@@ -15,8 +15,20 @@ href="{{ url_for('static', filename='css/main.css') }}"
       <p class="mt-1 max-w-2xl text-sm text-gray-500">Select You File</p>
     </div>
 
+    <div class="items-center px-5 ">
+
+      <div class="bg-red-100 rounded-xl text-center">
+        {% with messages = get_flashed_messages() %}
+          {% if  messages %}
+            {% for msg in messages %}
+              <p class='text-xl text-red-600'>{{ msg }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+  </div>
     <div class="mt-5 md:mt-0 md:col-span-2 sm:col-auto">
-      <form action="#" method="POST">
+      <form action="/file" method="POST" enctype=multipart/form-data>
         <div class="shadow overflow-hidden sm:rounded-md">
           <div class="px-4 py-5 bg-white sm:p-6">
             <div class="grid grid-cols-6 gap-6">
@@ -27,14 +39,13 @@ href="{{ url_for('static', filename='css/main.css') }}"
                   >Delete Columns</label
                 >
                 <input
-                  type="text"
+                  type="text" name="dColumns"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-5/6 shadow-lg sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="">
                 <input
-                  id="offers"
-                  name="offers"
+                  name="dColumnsCB"
                   type="checkbox"
                   class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded"
                 />
@@ -48,16 +59,13 @@ href="{{ url_for('static', filename='css/main.css') }}"
                 >
                 <input
                   type="text"
-                  name="last-name"
-                  id="last-name"
-                  autocomplete="family-name"
+                  name="newHeaders"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-lg sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="">
                 <input
-                  id="offers"
-                  name="offers"
+                  name="newHeadersCB"
                   type="checkbox"
                   class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded"
                 />
@@ -69,23 +77,23 @@ href="{{ url_for('static', filename='css/main.css') }}"
         <div class="grid grid-cols-6 gap-6 p-6">
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Name of Column</label>
-            <input type="text" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" name="column" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
 
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Searching Value</label>
-            <input type="text"class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" name="value" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div class="grid grid-cols-6 gap-6 p-6">
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Switch To Next?</label>
-            <input type="checkbox"  class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            <input type="checkbox" name="valueNextCB"  class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded">
           </div>
 
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Replace With</label>
-            <input type="text"class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" name="replaceValue" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div class="grid p-5">
@@ -97,9 +105,9 @@ href="{{ url_for('static', filename='css/main.css') }}"
                   <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 <div class="flex text-sm text-gray-600">
-                  <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                  <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                     <span>Upload a file</span>
-                    <input id="file-upload" name="file-upload" type="file" required accept=".xlsx, .xls" class="sr-only">
+                    <input name="upload" type="file" required accept=".xlsx, .xls" class="sr-only">
                   </label>
                   
                 </div>
