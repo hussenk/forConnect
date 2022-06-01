@@ -10,7 +10,6 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 
 @app.route(helpers.home, methods=['POST', 'GET'])
-
 def index():
     return render_template('index.html')
 
@@ -24,12 +23,11 @@ def old():
 def read():
     srv = serviceV2()
     if(srv.handelRequest() == False):
-        # TODO error flash message
         flash('missing in form', 'error')
         return redirect(helpers.home)
 
     if(srv.handelForm() == False):
-        # TODO error flash message
+       
         flash('missing in form', 'error')
         return redirect(helpers.home)
 

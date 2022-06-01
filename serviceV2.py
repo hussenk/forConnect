@@ -72,8 +72,6 @@ class serviceV2:
                     temp.remove(item)
                 else:
                     flash('error delete item not exist: \t' + item, 'error')
-                    # TODO error flash message
-                    print('error delete item not exist: \t' + item)
 
         self.headers = temp
         return True
@@ -96,22 +94,29 @@ class serviceV2:
         return True
 
     def replaceText(self):
+
+        if (self.column not in self.headers):
+            flash('the column dose not exist', 'error')
+            return False
+
         if (len(self.column) <= 0):
             return False
-        self.findInRow = []
 
+        self.findInRow = []
         row = 1
         for i in self.arrayData:
             row += 1
             if(i[self.column].find(self.value) >= 0):
-                if(self.setNext):
+                if(len(self.replaceValue) == 0 and self.setNext):
+                    i.update(
+                        {self.column: i[self.nextKey], self.nextKey: i[self.column]})
+                elif(self.setNext):
                     i.update(
                         {self.column: self.replaceValue, self.nextKey: i[self.column]})
                 else:
                     i.update(
                         {self.column: i[self.column].replace(self.value, self.replaceValue)})
-
-                flash('you Can find it in row:\t'+ str(row),'info')
+                flash('you Can find it in row:\t' + str(row), 'info')
                 self.findInRow.append(row)
         return True
 
