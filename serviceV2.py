@@ -16,19 +16,22 @@ class serviceV2:
     # handel the request if "False" then something wrong
     def handelRequest(self):
         if request.method == 'GET':
-            print('request get')  # TODO error flash message
             flash('Request Get', 'error')
             return False
 
         if ('upload' not in request.files):
             flash('No File', 'error')
-            print('no file')  # TODO error flash message
             return False
+
+        extension=''
+        if (len(request.files['upload'].filename) <= 0):
+            flash('check File', 'error')
+            return False
+       
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
             flash('Type of File', 'error')
-            print('Type of File')  # TODO error flash message
             return False
 
         return True

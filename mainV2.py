@@ -27,7 +27,6 @@ def read():
         return redirect(helpers.home)
 
     if(srv.handelForm() == False):
-       
         flash('missing in form', 'error')
         return redirect(helpers.home)
 
