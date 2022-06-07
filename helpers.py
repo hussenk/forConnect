@@ -3,3 +3,4 @@ def stringSpelter(str):
 
 
 home = '/'
+homeApi = '/api/'
