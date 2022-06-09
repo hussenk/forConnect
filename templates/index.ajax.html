@@ -29,23 +29,23 @@
       </div>
   </div>
     <div class="mt-5 md:mt-0 md:col-span-2 sm:col-auto">
-      <form action="/file" method="POST" enctype=multipart/form-data>
+      <form onsubmit="send()" method="POST" enctype="multipart/form-data">
         <div class="shadow overflow-hidden sm:rounded-md">
           <div class="px-4 py-5 bg-white sm:p-6">
             <div class="grid grid-cols-6 gap-6">
               <div class="col-span-5 sm:col-span-2 flex-row">
                 <label
-                
                   class="block text-sm font-medium text-gray-700"
                   >Delete Columns</label
                 >
-                <input
+                <input id='delete_columns'
                   type="text" name="delete_columns"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-5/6 shadow-lg sm:text-sm border-gray-300 rounded-md"
                 />
               </div>
               <div class="">
                 <input
+                  id="is_delete_on"
                   value='1'
                   name="is_delete_on"
                   type="checkbox"
@@ -60,6 +60,7 @@
                   >Order Headers</label
                 >
                 <input
+                  id="headers"
                   type="text"
                   name="headers"
                   class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-lg sm:text-sm border-gray-300 rounded-md"
@@ -67,6 +68,7 @@
               </div>
               <div class="">
                 <input
+                  id="is_new_headers_on"
                   value='1'
                   name="is_new_headers_on"
                   type="checkbox"
@@ -80,23 +82,23 @@
         <div class="grid grid-cols-6 gap-6 p-6">
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Name of Column</label>
-            <input type="text" name="searching_column" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" id="searching_column" name="searching_column" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
 
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Searching Value</label>
-            <input type="text" name="searching_value" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" id="searching_value" name="searching_value" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div class="grid grid-cols-6 gap-6 p-6">
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Switch To Next?</label>
-            <input type="checkbox" name="switch_to_next_on" value='1'  class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            <input type="checkbox"  id="switch_to_next_on" name="switch_to_next_on" value='1'  class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded">
           </div>
 
           <div class="col-span-6 sm:col-span-3">
             <label class="block text-sm font-medium text-gray-700">Replace With</label>
-            <input type="text" name="replaceValue" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
+            <input type="text" id="replaceValue" name="replaceValue" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full text-lg shadow-lg sm:text-sm border-gray-300 rounded-md">
           </div>
         </div>
         <div class="grid p-5">
@@ -110,7 +112,7 @@
                 <div class="flex text-sm text-gray-600">
                   <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
                     <span>Upload a file</span>
-                    <input name="upload" type="file"  accept=".xlsx, .xls" class="sr-only">
+                    <input name="upload" type="file"  id="upload"  accept=".xlsx, .xls" class="sr-only">
                   </label>
                   
                 </div>
@@ -121,7 +123,7 @@
         </div>
           <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
             <button
-              
+
               class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
               Send

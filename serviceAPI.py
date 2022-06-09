@@ -161,11 +161,12 @@ class serviceAPI:
             dict_writer.writeheader()
             dict_writer.writerows(self.arrayData)
 
-        print('creating CSV')
         return self.messages.append('createCSV done')
 
     def response(self):
 
+        # print('message ', self.messages)
+        # print('errors ', self.errors)
         return make_response(jsonify(
             {
                 'message': self.messages,
