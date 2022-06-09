@@ -108,7 +108,7 @@ class serviceAPI:
                     temp.remove(item)
                 else:
                     self.errors.append(
-                        'error delete item not exist: \t' + item)
+                        'error delete item not exist: ' + item)
 
         self.headers = temp
         return self.messages.append('deleteColumn done')
@@ -151,7 +151,7 @@ class serviceAPI:
                 else:
                     i.update(
                         {self.searching_column: i[self.searching_column].replace(self.searching_value, self.replaceValue)})
-                self.messages.append('you Can find it in row:\t' + str(row))
+                self.messages.append('you Can find it in row: ' + str(row))
                 self.findInRow.append(row)
         return self.messages.append('replaceText done')
 

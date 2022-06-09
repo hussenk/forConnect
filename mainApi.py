@@ -10,8 +10,13 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config["APPLICATION_ROOT"] = helpers.homeApi
 
 
-@app.route(helpers.homeApi, methods=['POST', 'GET'])
+@app.route(helpers.home, methods=['POST', 'GET'])
 def index():
+    return render_template('index.ajax.html')
+
+
+@app.route(helpers.homeApi, methods=['POST', 'GET'])
+def root():
     data = {'is_server_on': True, }
     return make_response(jsonify(data), 200)
 
@@ -28,7 +33,7 @@ def read():
     return srv.response()
 
 
-@app.route('/download', methods=['POST'])
+@app.route(helpers.homeApi+'/download', methods=['GET'])
 def download():
     return send_file(app.config['UPLOAD_FOLDER']+'\\out.csv', as_attachment=True)
 
