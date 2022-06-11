@@ -68,49 +68,50 @@ async function send() {
     headers: myHeaders,
     body: formdata,
   };
-  console.log("Send");
-  //FIXME: Can not get Response
+
+  var re;
   await fetch("http://127.0.0.1:5000/api/v1/file", requestOptions)
     .then((response) => response.json())
-    .then((result) => console.log(result))
-    .catch((error) => console.log("error", error));
+    .then((result) => {
+      let errors = result["errors"];
+      let messages = result["messages"];
+      if (errors.length > 0) {
+        document.querySelector("#errors").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        let body = document.querySelector("#errorsBody ul");
+        body.innerHTML = "";
+        errors.forEach((item) => {
+          let li = document.createElement("li");
+          li.appendChild(document.createTextNode(item));
+          body.appendChild(li);
+        });
+      }
+      if (messages.length > 0) {
+        document.querySelector("#messages").classList.remove("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        let body = document.querySelector("#messagesBody ul");
+        body.innerHTML = "";
+        messages.forEach((item) => {
+          let li = document.createElement("li");
+          li.appendChild(document.createTextNode(item));
+          body.appendChild(li);
+        });
+      }
+      download();
+      // console.log(messages);
+      // console.log(errors);
+    })
+    .catch((error) => {
+      console.log("error", error);
+      alert("error", error);
+    });
 }
 
 async function download() {
-  //FIXME: Can not Download The file
-  var myHeaders = new Headers();
-  myHeaders.append("Accept", "application/json");
-  var requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-  await fetch("http://127.0.0.1:5000/api/v1/download", requestOptions)
-    .then((response) => {
-      const reader = response.body.getReader();
-      return new ReadableStream({
-        start(controller) {
-          return pump();
-          function pump() {
-            return reader.read().then(({ done, value }) => {
-              // When no more data needs to be consumed, close the stream
-              if (done) {
-                controller.close();
-                return;
-              }
-              // Enqueue the next data chunk into our target stream
-              controller.enqueue(value);
-              return pump();
-            });
-          }
-        },
-      });
-    })
-    .then((stream) => new Response(stream))
-    .then((response) => response.blob())
-    .then((blob) => URL.createObjectURL(blob))
-    .catch((err) => console.error(err));
-  console.log("downloaded");
+  // window.location.href = "http://127.0.0.1:5000/api/v1/download";
+  document.querySelector("#downloadLink").click();
 }
 
 if (load()) {
