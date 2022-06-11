@@ -50,16 +50,19 @@ class service:
             self.statusCode = 422
             return self.errors.append('Type of File')
 
-        return self.messages.append('handelRequest done')
+        # return self.messages.append('handelRequest done')
+        return True
 
     def handelFile(self):
         self.wb = load_workbook(self.file)
         self.ws = self.wb.active
-        return self.messages.append('handelFile done')
+        # return self.messages.append('handelFile done')
+        return True
 
     def readHeaders(self):
         self.headers = [cell.value for cell in next(self.ws.rows)]
-        return self.messages.append('readHeaders done')
+        # return self.messages.append('readHeaders done')
+        return True
 
     def handelForm(self):
 
@@ -90,13 +93,15 @@ class service:
             self.replaceValue = ''
 
         self.file = request.files['upload']
-        return self.messages.append('handelForm done')
+        # return self.messages.append('handelForm done')
+        return True
 
     def setHeaders(self):
         if(len(self.newHeaders)):
             print('new')
             self.headers = self.newHeaders
-        return self.messages.append('setHeaders done')
+            self.messages.append('headers has been changed')
+        return True
 
     def deleteColumn(self):
         temp = self.headers.copy()
@@ -105,13 +110,14 @@ class service:
                 if (item in temp):
                     index = temp.index(item)
                     self.ws.delete_cols(index+1)
+                    self.messages.append('deleteColumn done')
                     temp.remove(item)
                 else:
                     self.errors.append(
-                        'error delete item not exist: ' + item)
+                        'Error delete item not exist: ' + item)
 
         self.headers = temp
-        return self.messages.append('deleteColumn done')
+        return True
 
     def readRows(self):
         rows = self.ws.iter_rows(2)
@@ -120,7 +126,8 @@ class service:
             for title, cell in zip(self.headers, row):
                 data[title] = cell.value
             self.arrayData.append(data)
-        return self.messages.append('readRows done')
+        # return self.messages.append('readRows done')
+        return True
 
     def getNextColumn(self):
         if(self.searching_column in self.headers and self.setNext):
@@ -128,7 +135,8 @@ class service:
             if(self.headers.index(self.searching_column)+1 > len(self.headers)-1):
                 index = 0
             self.nextKey = self.headers[index]
-        return self.messages.append('getNextColumn done')
+        # return self.messages.append('getNextColumn done')
+        return True
 
     def replaceText(self):
 
@@ -153,7 +161,8 @@ class service:
                         {self.searching_column: i[self.searching_column].replace(self.searching_value, self.replaceValue)})
                 self.messages.append('you Can find it in row: ' + str(row))
                 self.findInRow.append(row)
-        return self.messages.append('replaceText done')
+
+        return True
 
     def createCSV(self):
         with open(self.path+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
@@ -161,7 +170,7 @@ class service:
             dict_writer.writeheader()
             dict_writer.writerows(self.arrayData)
 
-        return self.messages.append('createCSV done')
+        return self.messages.append('create csv')
 
     def response(self):
         return helpers.response(self.messages, self.errors, self.statusCode)
