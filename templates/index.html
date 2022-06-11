@@ -13,7 +13,36 @@
   </head>
 
 <!-- This example requires Tailwind CSS v2.0+ -->
+
 <div class="items-center p-10 rounded-3xl">
+  <div class=" mb-5 hidden " id="errors" >
+  
+    <div role="alert">
+      <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+        Errors
+      </div>
+      <div id="errorsBody" class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+       <ul>
+
+       </ul>
+      </div>
+    </div>
+  </div>
+  <div class=" mb-5 hidden " id="messages" >
+  
+    <div role="alert">
+      <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
+        Messages
+      </div>
+      <div id="messagesBody" class="border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700">
+       <ul>
+
+       </ul>
+       <br>
+       <a id="downloadLink" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" href="/api/v1/download">Download </a>
+      </div>
+    </div>
+  </div>
   <div class="bg-white overflow-hidden rounded-xl shadow-xl">
     <div class="px-4 py-5 sm:px-6">
       <h3 class="text-xl leading-6 font-medium text-gray-900">
@@ -29,7 +58,7 @@
       </div>
   </div>
     <div class="mt-5 md:mt-0 md:col-span-2 sm:col-auto">
-      <form onsubmit="send()" method="POST" enctype="multipart/form-data">
+      <form id="formFile" onsubmit="send();  return false;" action="" method="POST" enctype="multipart/form-data">
         <div class="shadow overflow-hidden sm:rounded-md">
           <div class="px-4 py-5 bg-white sm:p-6">
             <div class="grid grid-cols-6 gap-6">
@@ -136,6 +165,9 @@
 </div>
 
 <script language = "javascript" type = "text/javascript" src='../static/js/main.js'></script>
+19
+
+
 </body>
 </html>
 
