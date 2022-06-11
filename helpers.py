@@ -15,7 +15,7 @@ homeApi = '/api/v1'
 def response(messages, errors, statusCode):
     return make_response(jsonify(
         {
-            'message': messages,
+            'messages': messages,
             'errors': errors,
         }
     ), statusCode)
