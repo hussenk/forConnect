@@ -167,12 +167,21 @@ class service:
 
         return True
 
+    def addNewColumn(self):
+        row = 1
+        for i in self.arrayData:
+            i["#"] = "%03d" % (row)
+            row += 1
+            # print(i["#"])
+
     def createCSV(self):
+        self.headers.insert(0, "#")
+        self.addNewColumn()
+        print(self.headers)
         with open(self.path+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
             dict_writer = csv.DictWriter(output_file,  self.headers)
             dict_writer.writeheader()
             dict_writer.writerows(self.arrayData)
-
         return self.messages.append('create csv')
 
     def response(self):
