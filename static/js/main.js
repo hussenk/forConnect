@@ -40,7 +40,7 @@ async function send() {
   );
   formdata.append(
     "is_new_headers_on",
-    checkedOrNot(document.querySelector("#is_delete_on").checked)
+    checkedOrNot(document.querySelector("#is_new_headers_on").checked)
   );
   formdata.append(
     "switch_to_next_on",
