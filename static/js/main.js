@@ -1,23 +1,25 @@
-async function load() {
-  var myHeaders = new Headers();
-  myHeaders.append("Accept", "application/json");
+// async function checkHealth() {
+//   var myHeaders = new Headers();
+//   myHeaders.append("Accept", "application/json");
 
-  var requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-  var re;
-  await fetch("http://127.0.0.1:5000/api/v1", requestOptions)
-    .then((response) => response.json())
-    .then(function (result) {
-      console.log(result);
-      re = result;
-    })
-    .catch((error) => console.log("error", error));
+//   var requestOptions = {
+//     method: "GET",
+//     headers: myHeaders,
+//     redirect: "follow",
+//   };
+//   var re;
+//   await fetch("http://127.0.0.1:5000/api/v1", requestOptions)
+//     .then((response) => {
+//       response.json();
+//     })
+//     .then(function (result) {
+//       console.log(result);
+//       re = result;
+//     })
+//     .catch((error) => console.log("error", error));
 
-  return re.is_server_on;
-}
+//   return re.is_server_on;
+// }
 
 function checkedOrNot(item) {
   if (item) {
@@ -71,7 +73,10 @@ async function send() {
 
   var re;
   await fetch("http://127.0.0.1:5000/api/v1/file", requestOptions)
-    .then((response) => response.json())
+    .then((response) => {
+      re = response;
+      return response.json();
+    })
     .then((result) => {
       let errors = result["errors"];
       let messages = result["messages"];
@@ -99,9 +104,9 @@ async function send() {
           body.appendChild(li);
         });
       }
-      download();
-      // console.log(messages);
-      // console.log(errors);
+      if (re.status == 200) {
+        download();
+      }
     })
     .catch((error) => {
       console.log("error", error);
@@ -114,9 +119,9 @@ async function download() {
   document.querySelector("#downloadLink").click();
 }
 
-if (load()) {
-  //   send();
-  // download();
-} else {
-  console.log("error");
-}
+// if (checkHealth()) {
+//   send();
+// download();
+// } else {
+// console.log("error");
+// }

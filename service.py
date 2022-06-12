@@ -7,17 +7,16 @@ from openpyxl import load_workbook
 class service:
 
     def run(self):
-        pass
-        self.handelRequest()
-        self.handelForm()
-        self.handelFile()
-        self.readHeaders()
-        self.deleteColumn()
-        self.setHeaders()
-        self.getNextColumn()
-        self.readRows()
-        self.replaceText()
-        self.createCSV()
+        if (self.handelRequest()):
+            self.handelForm()
+            self.handelFile()
+            self.readHeaders()
+            self.deleteColumn()
+            self.setHeaders()
+            self.getNextColumn()
+            self.readRows()
+            self.replaceText()
+            self.createCSV()
 
     def __init__(self, path):
         self.statusCode = 200
@@ -33,22 +32,26 @@ class service:
 
         if request.method == 'GET':
             self.statusCode = 402  # method not allowed
-            return self.errors.append('Request Get')
+            self.errors.append('Request Get')
+            return False
 
         if ('upload' not in request.files):
             self.statusCode = 422
-            return self.errors.append('No File')
+            self.errors.append('No File')
+            return False
 
         extension = ''
         if (len(request.files['upload'].filename) <= 0):
             self.statusCode = 422
-            return self.errors.append('check File')
+            self.errors.append('check File')
+            return False
 
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
             self.statusCode = 422
-            return self.errors.append('Type of File')
+            self.errors.append('Type of File')
+            return False
 
         # return self.messages.append('handelRequest done')
         return True
