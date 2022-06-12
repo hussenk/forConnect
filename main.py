@@ -1,10 +1,12 @@
 from operator import imod
-from flask import Flask, render_template, request, send_file, url_for, redirect
-from service import service
+from flask import Flask, render_template, request, send_file, url_for, redirect, flash
+from service import serviceV2
 import helpers
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
 app.config['debug'] = True
+app.secret_key = 'super secret key'
+app.config['SESSION_TYPE'] = 'filesystem'
 
 
 @app.route(helpers.home, methods=['POST', 'GET'])
@@ -12,67 +14,33 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/old', methods=['POST', 'GET'])
+def old():
+    return render_template('oldindex.html')
+
+
 @app.route('/file', methods=['GET', 'POST'])
 def read():
-    srv = service()
-
-    try:
-        if(srv.handelErrorUpload() == False):
-            return redirect(helpers.home)
-    except:
-        print('error handelErrorUpload')
+    srv = serviceV2()
+    if(srv.handelRequest() == False):
+        flash('missing in form', 'error')
         return redirect(helpers.home)
 
-    srv.setDirectory(app.config['UPLOAD_FOLDER'])
-
-    try:
-        srv.loadFile()
-    except:
-        print('error loadfile')
+    if(srv.handelForm() == False):
+        flash('missing in form', 'error')
         return redirect(helpers.home)
 
-    try:
-        srv.getForm()
-    except:
-        print('error getForm')
-        return redirect(helpers.home)
+    srv.handelFile()
+    srv.readHeaders()
+    srv.deleteColumn()
+    srv.setHeaders()
+    srv.getNextColumn()
+    srv.readRows()
+    srv.replaceText()
+    srv.createCSV(app.config['UPLOAD_FOLDER'])
 
-    try:
-        srv.setHeaders()
-    except:
-        print('error setHeaders')
-        return redirect(helpers.home)
-
-    try:
-        srv.readRows()
-    except:
-        print('error readRows')
-        return redirect(helpers.home)
-
-    # srv.replaceText()
-    try:
-        srv.replaceText()
-    except:
-        print('error replaceText')
-        # return redirect(helpers.home)
-
-    if request.form.get('dColumnsCB') == 'on':
-        # print('delete')
-        srv.deleteColumn()
-
-    try:
-        srv.saveCsv()
-    except:
-        print('error saveCsv')
-        return redirect(helpers.home)
-
-    # try:
-    #     srv.download()
-    # except:
-    #     print('error download')
-        # return redirect(helpers.home)
-
-    return render_template('file.html')
+    return send_file(app.config['UPLOAD_FOLDER']+'\\out.csv', as_attachment=True)
+    # return render_template('file.html')
 
 
 @app.route('/download')

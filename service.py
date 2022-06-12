@@ -1,11 +1,11 @@
 import csv
 import helpers
-from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect
+from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect, flash
 from openpyxl import load_workbook
 import sys
 
 
-class service:
+class serviceV2:
 
     def __init__(self):
         self.arrayData = []
@@ -13,7 +13,39 @@ class service:
         self.dColumns = []
         self.setNext = False
 
-    def getForm(self):
+    # handel the request if "False" then something wrong
+    def handelRequest(self):
+        if request.method == 'GET':
+            flash('Request Get', 'error')
+            return False
+
+        if ('upload' not in request.files):
+            flash('No File', 'error')
+            return False
+
+        extension=''
+        if (len(request.files['upload'].filename) <= 0):
+            flash('check File', 'error')
+            return False
+       
+        file = request.files['upload']
+        name, extension = file.filename.rsplit('.', 1)
+        if(extension != 'xlsx'):
+            flash('Type of File', 'error')
+            return False
+
+        return True
+
+    def handelFile(self):
+        self.wb = load_workbook(self.file)
+        self.ws = self.wb.active
+        return True
+
+    def readHeaders(self):
+        self.headers = [cell.value for cell in next(self.ws.rows)]
+        return True
+
+    def handelForm(self):
         if (request.form.get('newHeadersCB') == 'on'):
             self.newHeaders = helpers.stringSpelter(request.form['newHeaders'])
         if (request.form.get('dColumnsCB') == 'on'):
@@ -23,111 +55,76 @@ class service:
         self.column = request.form['column']
         self.value = request.form['value']
         self.replaceValue = request.form['replaceValue']
-        # print(self.dColumns)
-
-    def handelErrorUpload(self):
-        if request.method == 'GET':
-            print('request get')
-            return False
-
-        if ('upload' not in request.files):
-            print('no file')
-            return False
 
         self.file = request.files['upload']
-        self.name, self.extension = self.file.filename.rsplit('.', 1)
-        if(self.extension != 'xlsx'):
-            print('type of file')
-            return False
+        return True
 
+    def setHeaders(self):
+        if(len(self.newHeaders)):
+            print('new')
+            self.headers = self.newHeaders
+        return True
+
+    def deleteColumn(self):
+        temp = self.headers.copy()
+        if (len(self.dColumns)):
+            for item in self.dColumns:
+                if (item in temp):
+                    index = temp.index(item)
+                    self.ws.delete_cols(index+1)
+                    temp.remove(item)
+                else:
+                    flash('error delete item not exist: \t' + item, 'error')
+
+        self.headers = temp
         return True
 
     def readRows(self):
-        self.arrayData = []
         rows = self.ws.iter_rows(2)
         for row in rows:
             data = {}
             for title, cell in zip(self.headers, row):
                 data[title] = cell.value
             self.arrayData.append(data)
-        # print(row)
         return True
 
-    # set file directory
-
-    def setDirectory(self, directory):
-        self.directory = directory
+    def getNextColumn(self):
+        if(self.column in self.headers and self.setNext):
+            index = self.headers.index(self.column)+1
+            if(self.headers.index(self.column)+1 > len(self.headers)-1):
+                index = 0
+            self.nextKey = self.headers[index]
         return True
-
-    def getHeaders(self):
-        self.oldHeaders = [cell.value for cell in next(self.ws.rows)]
-        return len(self.oldHeaders)
-
-    def loadFile(self):
-        # print(self.name)
-        wb = load_workbook(self.file)
-        self.ws = wb.active
-        return True
-
-    def deleteColumn(self):
-        self.getHeaders()
-        for item in self.dColumns:
-            if (item in self.oldHeaders):
-                index = self.oldHeaders.index(item)
-                self.ws.delete_cols(index+1)
-                self.oldHeaders.remove(item)
-            else:
-                print('error delete item not exist: \t' + item)
-        self.setHeaders()
-        self.readRows()
-
-    def setHeaders(self):
-        count = self.getHeaders()
-        # print(count)
-        if (request.form.get('newHeadersCB') == 'on' and count == len(self.newHeaders)):
-            self.headers = self.newHeaders
-        else:
-            self.headers = self.oldHeaders
-        self.readRows()
-        return True
-
-    def saveCsv(self):
-        # print(self.arrayData)
-        with open(self.directory+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
-            dict_writer = csv.DictWriter(output_file,  self.headers)
-            dict_writer.writeheader()
-            dict_writer.writerows(self.arrayData)
 
     def replaceText(self):
-        self.findInRow = []
-        index = self.oldHeaders.index(self.column)+1
-        # print(index)
-        # handel out of range error
-        if(self.oldHeaders.index(self.column)+1 > len(self.oldHeaders)-1):
-            index = 0
-        nextKey = self.oldHeaders[index]
 
-        # start looping to find the key and the value
+        if (self.column not in self.headers):
+            flash('the column dose not exist', 'error')
+            return False
+
+        if (len(self.column) <= 0):
+            return False
+
+        self.findInRow = []
         row = 1
         for i in self.arrayData:
             row += 1
-            # when find the value in key, change the value, and set it to next key
             if(i[self.column].find(self.value) >= 0):
-                if(self.setNext):
+                if(len(self.replaceValue) == 0 and self.setNext):
                     i.update(
-                        {self.column: self.replaceValue, nextKey: i[self.column]})
+                        {self.column: i[self.nextKey], self.nextKey: i[self.column]})
+                elif(self.setNext):
+                    i.update(
+                        {self.column: self.replaceValue, self.nextKey: i[self.column]})
                 else:
                     i.update(
                         {self.column: i[self.column].replace(self.value, self.replaceValue)})
+                flash('you Can find it in row:\t' + str(row), 'info')
                 self.findInRow.append(row)
-        # print(self.arrayData)
-        # self.readRows()
-        print(self.findInRow)
+        return True
 
-    # def download(self):
-        # print('file?')
-        # return send_from_directory(directory=self.directory, filename='out.csv',path=sys.path[0])
-        # return send_file(self.directory+'\\out.csv', as_attachment=True)
-        # print(self.directory)
-        # Returning file from appended path
-        # return send_from_directory(directory=uploads, filename=filename)
+    def createCSV(self, path):
+        with open(path+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
+            dict_writer = csv.DictWriter(output_file,  self.headers)
+            dict_writer.writeheader()
+            dict_writer.writerows(self.arrayData)
