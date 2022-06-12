@@ -39,7 +39,7 @@
 
        </ul>
        <br>
-       <a id="downloadLink" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" href="/api/v1/download">Download </a>
+       <a id="downloadLink" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500" href="#">Download </a>
       </div>
     </div>
   </div>
@@ -132,7 +132,15 @@
         </div>
         <div class="grid p-5">
           <div>
-            <label class="block text-sm font-medium text-gray-700"> Xlsx File </label>
+            
+
+            <label class=" block text-sm font-medium text-gray-700"> Xlsx File  </label>
+            <div class=" block text-sm font-medium text-gray-700">
+              out xlsx?
+              <input type="checkbox"  id="xlsx_on" name="xlsx_on" value='1'   class="focus:ring-indigo-500 my-4 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+            </div>
+
+            
             <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
               <div class="space-y-1 text-center">
                 <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -140,7 +148,7 @@
                 </svg>
                 <div class="flex text-sm text-gray-600">
                   <label class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
-                    <span>Upload a file</span>
+                    <span>Upload a file</span> 
                     <input name="upload" type="file"  id="upload"  accept=".xlsx, .xls" class="sr-only">
                   </label>
                   
@@ -165,7 +173,7 @@
 </div>
 
 <script language = "javascript" type = "text/javascript" src='../static/js/main.js'></script>
-19
+
 
 
 </body>

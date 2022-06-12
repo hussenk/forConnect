@@ -1,4 +1,7 @@
+from codecs import utf_8_decode, utf_8_encode
 import csv
+from multiprocessing.connection import wait
+import openpyxl
 import helpers
 from flask import request
 from openpyxl import load_workbook
@@ -26,6 +29,7 @@ class service:
         self.newHeaders = []
         self.delete_columns = []
         self.setNext = False
+        self.is_xlsx = False
         self.path = path
 
     def handelRequest(self):
@@ -79,6 +83,9 @@ class service:
 
         if (request.form.get('switch_to_next_on') == '1'):
             self.setNext = True
+
+        if (request.form.get('xlsx_on') == '1'):
+            self.is_xlsx = True
 
         if(request.form.get('searching_column')):
             self.searching_column = request.form.get('searching_column')
@@ -177,12 +184,30 @@ class service:
     def createCSV(self):
         self.headers.insert(0, "#")
         self.addNewColumn()
-        print(self.headers)
-        with open(self.path+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
-            dict_writer = csv.DictWriter(output_file,  self.headers)
-            dict_writer.writeheader()
-            dict_writer.writerows(self.arrayData)
-        return self.messages.append('create csv')
+        if(self.is_xlsx == False):
+            with open(self.path+'\out.csv', 'w', newline='', encoding="utf-8") as output_file:
+                dict_writer = csv.DictWriter(output_file,  self.headers)
+                dict_writer.writeheader()
+                dict_writer.writerows(self.arrayData)
+
+        if (self.is_xlsx):
+            with open(self.path+'\out.csv', 'w', newline='') as output_file:
+                dict_writer = csv.DictWriter(output_file,  self.headers)
+                dict_writer.writeheader()
+                dict_writer.writerows(self.arrayData)
+
+            wb = openpyxl.Workbook()
+            ws = wb.active
+
+            with open(self.path+'\out.csv') as f:
+                reader = csv.reader(
+                    f, delimiter=',')
+                for row in reader:
+                    print(row)
+                    ws.append(row)
+            wb.save(self.path+'\out.xlsx')
+
+        return self.messages.append('create File')
 
     def response(self):
         return helpers.response(self.messages, self.errors, self.statusCode)

@@ -29,8 +29,13 @@ def upload():
 
 
 @app.route(helpers.homeApi+'/download', methods=['GET'])
-def download():
+def download_csv():
     return send_file(app.config['UPLOAD_FOLDER']+'\\out.csv', as_attachment=True)
+
+
+@app.route(helpers.homeApi+'/download/xlsx', methods=['GET'])
+def download_xlsx():
+    return send_file(app.config['UPLOAD_FOLDER']+'\\out.xlsx', as_attachment=True)
 
 
 if (__name__ == "__main__"):

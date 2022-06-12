@@ -27,7 +27,7 @@ function checkedOrNot(item) {
   }
   return 0;
 }
-
+var bool_is_xlsx = 0;
 async function send() {
   var myHeaders = new Headers();
   myHeaders.append("Accept", "application/json");
@@ -38,6 +38,9 @@ async function send() {
     "is_delete_on",
     checkedOrNot(document.querySelector("#is_delete_on").checked)
   );
+
+  bool_is_xlsx = checkedOrNot(document.querySelector("#xlsx_on").checked);
+  formdata.append("xlsx_on", bool_is_xlsx);
   formdata.append(
     "is_new_headers_on",
     checkedOrNot(document.querySelector("#is_new_headers_on").checked)
@@ -116,7 +119,14 @@ async function send() {
 
 async function download() {
   // window.location.href = "http://127.0.0.1:5000/api/v1/download";
-  document.querySelector("#downloadLink").click();
+
+  link = document.querySelector("#downloadLink");
+  if (bool_is_xlsx) {
+    link.href = "api/v1/download/xlsx";
+  } else {
+    link.href = "api/v1/download";
+  }
+  link.click();
 }
 
 // if (checkHealth()) {
