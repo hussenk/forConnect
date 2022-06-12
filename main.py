@@ -1,6 +1,6 @@
 from operator import imod
 from flask import Flask, render_template, request, send_file, url_for, redirect, flash
-from service import serviceV2
+from service import service
 import helpers
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'temp'
@@ -21,7 +21,7 @@ def old():
 
 @app.route('/file', methods=['GET', 'POST'])
 def read():
-    srv = serviceV2()
+    srv = service()
     if(srv.handelRequest() == False):
         flash('missing in form', 'error')
         return redirect(helpers.home)

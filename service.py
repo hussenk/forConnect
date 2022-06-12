@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 import sys
 
 
-class serviceV2:
+class service:
 
     def __init__(self):
         self.arrayData = []
@@ -23,11 +23,11 @@ class serviceV2:
             flash('No File', 'error')
             return False
 
-        extension=''
+        extension = ''
         if (len(request.files['upload'].filename) <= 0):
             flash('check File', 'error')
             return False
-       
+
         file = request.files['upload']
         name, extension = file.filename.rsplit('.', 1)
         if(extension != 'xlsx'):
